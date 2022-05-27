@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react"
 
 import './App.css';
+import "simplebar/dist/simplebar.min.css";
+
 import useAuth, { AuthContext } from "./auth"
 
 import { Login, User } from "./components"
+
+import SimpleBar from "simplebar-react";
 
 function App() {
   //STATE_______________________________________
   const [text, setText] = useState("")
   const [messages, setMessages] = useState([])
+  const [activeUser, setActiveUser] = useState(null)
+  const [status, setStatus] = useState(false)
 
   //AUTH________________________________________
   const { user, firebase } = useAuth()
@@ -19,8 +25,37 @@ function App() {
     return () => unsubscribe()
   }, [])
 
+  useEffect(() => {
+    const unsubscribe = firebase.getStatus(handleStatusChangeSnapshot)
+
+    return () => unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    if (text.length && !status) {
+      setStatus(true)
+      firebase.setStatus(user.uid, true)
+    } else if (!text.length && status) {
+      setStatus(false)
+      firebase.setStatus(user.uid, false)
+
+    } 
+  }, [text, user, status])
+
   //FUNCTIONS___________________________________
-  const handleTextChange = e => setText(e.target.value)
+  const handleTextChange = e => {
+    setText(e.target.value)
+  }
+
+  const handleStatusChangeSnapshot = snapshot => {
+    const users = snapshot.docs.map(doc => ({
+      ...doc.data()
+    }))
+
+    let user = users.find(el => el.active)
+    if(user) setActiveUser(user)
+    else setActiveUser(null)
+  }
 
   const handleSnapshot = snapshot => {
     const messages = snapshot.docs.map(doc => ({
@@ -28,7 +63,6 @@ function App() {
       ...doc.data()
     }))
 
-    console.log(messages)
     setMessages(messages)
   }
 
@@ -59,16 +93,24 @@ function App() {
           </div>
           <div className="content">
             <div className="messages">
-              {
-                messages.map(message => (
-                  <div className="message" key={ message.id }>
-                    <img className="avatar" src={ message.author.avatar } />
-                    <p>{ message.text }</p>
-                  </div>
-                ))
-              }
+              <SimpleBar style={{ height: '100%' }}>
+                {
+                  messages.map(message => (
+                    <div className="message" key={ message.id }>
+                      <img className="avatar" src={ message.author.avatar } />
+                      <p>{ message.text }</p>
+                    </div>
+                  ))
+                }
+              </SimpleBar>
             </div>
             <div className='input'>
+              {
+                activeUser ?
+                <p style={{ margin: '5px 0px' }}>{activeUser.displayName} is typing . . .</p>
+                :
+                <div style={{ height: "31px" }}></div>
+              }
               <form onSubmit={ handleSubmit } style={{ width: '100%'}}>
                 <input type="text" value={ text } onChange={ handleTextChange } />
                 <button style={{ marginLeft: 3 }} type="submit">SEND</button>

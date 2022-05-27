@@ -15,7 +15,8 @@ import {
   collection,
   onSnapshot,
   query,
-  orderBy
+  orderBy,
+  where
 } from "firebase/firestore"
 import firebaseConfig from './firebase-config';
 
@@ -47,15 +48,10 @@ class Firebase {
       const userRef = doc(db, "users", user.uid)
       setDoc(userRef, { 
           email: user.email, 
-          // displayName: user.displayName, 
-          // photoURL: user.photoURL 
+          displayName: user.displayName, 
+          photoURL: user.photoURL 
         }, { merge: true })
-      // const userRef = await addDoc(collection(db, "users"), { 
-      //   email: user.email, 
-      //   displayName: user.displayName, 
-      //   photoURL: user.photoURL 
-      // })
-      // console.log(userRef)
+
       return { result: true, user: userRef }
     } catch (error) {
       console.error(error)
@@ -73,6 +69,22 @@ class Firebase {
     const { db } = this
 
     const q = query(collection(db, "messages"), orderBy("createdAt", "desc"))
+
+    return onSnapshot(q, handleSnapshot)
+  }
+
+  setStatus = async (uid, status) => {
+    const { db } = this
+    const userRef = doc(db, "users", uid)
+    setDoc(userRef, { 
+      active: status
+    }, { merge: true })
+  }
+
+  getStatus = handleSnapshot => {
+    const { db } = this
+
+    const q = query(collection(db, "users"), where("active", "==", true))
 
     return onSnapshot(q, handleSnapshot)
   }
