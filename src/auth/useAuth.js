@@ -8,6 +8,7 @@ export default function useAuth() {
     const unsubscribe = firebase.auth.onAuthStateChanged(data => {
       console.log(data)
       if (data) {
+        firebase.newUser(data)
         setUser(data)
       } else {
         setUser(null)

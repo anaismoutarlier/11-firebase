@@ -8,14 +8,26 @@ function App() {
 
   return (
     <AuthContext.Provider value={ { user, firebase } } >
-      <div className="App">
-        <header className="App-header">
+      {
+        user ?
+        <div className="App">
+          <div className="sider">
+            <User />
+          </div>
+          <div className="content">
+            <div className="messages">
 
-          <User />
-          <Login />
-
-        </header>
-      </div>
+            </div>
+            <div className='input'>
+              <input type="text" />
+              <button style={{ marginLeft: 3 }}>SEND</button>
+            </div>
+          </div>
+        </div>
+        : <div className='login'>
+            <Login />
+          </div>
+      }
     </AuthContext.Provider>
   );
 }

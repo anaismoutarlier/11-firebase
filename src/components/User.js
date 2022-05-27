@@ -2,17 +2,13 @@ import { useContext } from 'react'
 import { AuthContext } from '../auth'
 
 export default function User() {
-  const { user } = useContext(AuthContext)
+  const { user, firebase } = useContext(AuthContext)
 
   return user ? (
     <>
-      <img src={ user.photoURL } />
-      <h3>{ user.displayName }</h3>
-      <h3>{ user.uid }</h3>
+      <img src={ user.photoURL } className="avatar" />
+      <h3 className="username">{ user.displayName }</h3>
+      <button onClick={firebase.logout}>Logout</button>
     </>
-  ) : (
-    <div>
-      <h2>No user.</h2>
-    </div>
-  )
+  ) : null
 }
