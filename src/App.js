@@ -97,8 +97,16 @@ function App() {
                 {
                   messages.map(message => (
                     <div className="message" key={ message.id }>
-                      <img className="avatar" src={ message.author.avatar } />
-                      <p>{ message.text }</p>
+                      <div className="message-content">
+                        <img className="avatar" alt="" src={ message.author.avatar } style={{ marginRight: 10 }}/>
+                        <div>
+                          <p className="author-name">{ message.author.displayName }</p>
+                          <p className="message-text">{ message.text }</p>
+                        </div>
+                      </div>
+                      <p>
+                        { new Date(message.createdAt.toDate()).toLocaleTimeString("fr-fr", { hour: "2-digit", minute: '2-digit' }) }
+                      </p>
                     </div>
                   ))
                 }
