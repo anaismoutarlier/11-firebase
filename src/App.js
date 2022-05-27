@@ -115,9 +115,9 @@ function App() {
             <div className='input'>
               {
                 activeUser ?
-                <p style={{ margin: '5px 0px' }}>{activeUser.displayName} is typing . . .</p>
+                <p style={{ margin: '5px 0px' }} className="author-name">{activeUser.displayName} is typing . . .</p>
                 :
-                <div style={{ height: "31px" }}></div>
+                <div style={{ height: "27px" }}></div>
               }
               <form onSubmit={ handleSubmit } style={{ width: '100%'}}>
                 <input type="text" value={ text } onChange={ handleTextChange } />
