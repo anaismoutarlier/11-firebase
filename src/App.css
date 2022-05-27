@@ -25,9 +25,13 @@
 
 .input {
   border-top: 1px solid rgba(0, 0,0, 0.1);
+  padding: 35px 30px;
+
+}
+
+.input > form {
   display: grid;
   grid-template-columns: 1fr 100px;
-  padding: 35px 30px;
 }
 
 .avatar {
@@ -44,6 +48,8 @@
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
+  /* overflow-y: scroll;
+  height: calc(100vh - 100px); */
 }
 
 button {
@@ -58,4 +64,14 @@ button {
 input {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 3px;;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 80%;
+  box-sizing: border-box;
+  margin: 5px;
+  padding: 15px;
 }

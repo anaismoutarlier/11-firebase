@@ -12,7 +12,10 @@ import {
   doc,
   setDoc,
   addDoc,
-  collection
+  collection,
+  onSnapshot,
+  query,
+  orderBy
 } from "firebase/firestore"
 import firebaseConfig from './firebase-config';
 
@@ -59,6 +62,19 @@ class Firebase {
 
       return { result: false }
     }
+  }
+
+  newMessage = async message => {
+    const { db } = this
+    await addDoc(collection(db, "messages"), { ...message })
+  }
+
+  getMessages = handleSnapshot => {
+    const { db } = this
+
+    const q = query(collection(db, "messages"), orderBy("createdAt", "desc"))
+
+    return onSnapshot(q, handleSnapshot)
   }
 }
 
